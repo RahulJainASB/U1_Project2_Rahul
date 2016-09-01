@@ -40,7 +40,7 @@ void draw()
   {
     background(200);
     textSize(32);
-    text("I have been hit", 500, 300);
+    text("I have been hit", width/2 - 120, height/2);
   }
   else
   {
