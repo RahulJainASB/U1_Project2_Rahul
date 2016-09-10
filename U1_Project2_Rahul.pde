@@ -34,7 +34,7 @@ class Tree
      treeX=x;
      treeY=y;
      treeXSpeed        = 0;
-     treeYSpeed        = 5;
+     treeYSpeed        = 7;
      treeWidth         = 200;
      treeHeight        = 200;
      isTreeDisplayed = false;
@@ -273,10 +273,23 @@ void showScore()
 void updateScore()
 {
   score = treesFallen;
+  /*
+  if ((score>=0) && (score<10))
+    level = 1
+  if ((score>=10) && (score<20))
+    level = 2;
+  */
+  
+  float i = score / 10;
+  int j = floor(i);
+  
+  level=1+j;
+  /*
   if ((score % 10) == 0)
   {
     level++;
   }
+  */
 }
 
 void moveTreesDown()
