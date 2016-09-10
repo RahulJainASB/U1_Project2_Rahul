@@ -1,22 +1,21 @@
 /*
 
-Hedgehog and Tree Screensaver by Rahul Jain
+Hedgehog and Tree Game by Rahul Jain
 
-This project is a screensaver that moves a tree vertically (across the y-axis) from random positions on the x axis.and a hedgehog horizontaly (across the x-axis)  
-This porject uses the translate function to move the image to its new position and draws the image.
+This project is a game in which the user must move a picture to avoid a collision and lose the game.
 
  */
 
 // General variables
-boolean showInstructions = true;
-int score = 0;
-int level = 1;
-int treesFallen = 1;
-Tree tree1 = new Tree(100,0);
-Tree tree2 = new Tree(500,0);
-Tree tree3 = new Tree(1000,0);
-Hedgehog hedgehog = new Hedgehog();
-boolean stop = false;
+boolean showInstructions  = true;
+int     score             = 0;
+int     level             = 1;
+int     treesFallen       = 1;
+Tree    tree1             = new Tree(100,0);
+Tree    tree2             = new Tree(500,0);
+Tree    tree3             = new Tree(1000,0);
+Hedgehog hedgehog         = new Hedgehog();
+boolean stop              = false;
 
 
 class Tree
@@ -32,20 +31,17 @@ class Tree
   
   Tree(float x, float y)
    {
-     treeX=x;
-     treeY=y;
+     treeX             = x;
+     treeY             = y;
      treeXSpeed        = 0;
      treeYSpeed        = 7;
      treeWidth         = 200;
      treeHeight        = 200;
-     isTreeDisplayed = false;
+     isTreeDisplayed   = false;
    }
    
   void draw()
   {
-  // Translate to the position where to draw the tree
-  //  translate(treeXPosition, treeYPosition);
-  //  image(tree, 0, 0, 300, 300);
     image(tree, treeX, treeY,  treeWidth, treeHeight);
   }
   
@@ -84,31 +80,19 @@ class Tree
   boolean hasHitHedgehog()
   {
     if( hedgehog.hedgehogX > (treeX + treeWidth) )
-    {
-      println ("met1",hedgehog.hedgehogX,"    ",treeX, "     ",treeWidth );
       return false;
-    }
     
     if( ( hedgehog.hedgehogX +  hedgehog.hedgehogWidth) < treeX)
-     {
-      println ("met2",hedgehog.hedgehogX,"    ",hedgehog.hedgehogWidth, "     ",treeX );
-       return false;
-     }
-    if(  hedgehog.hedgehogY > (treeY + treeHeight) )
-    {
-           println ("met3",hedgehog.hedgehogY,"    ",treeY, "     ",treeHeight );
-
       return false;
-    } 
+     
+    if(  hedgehog.hedgehogY > (treeY + treeHeight) )
+      return false;
+    
     if( ( hedgehog.hedgehogY +  hedgehog.hedgehogHeight) < treeY)
-     {
-                 println ("met4",hedgehog.hedgehogY,"    ",hedgehog.hedgehogHeight, "     ",treeY );
-
-       return false;
-     }
-     println ("met5");
-     printYourself();
-     hedgehog.printYourself();
+      return false;
+     
+     //printYourself();
+     //hedgehog.printYourself();
     return true;
   }
 
@@ -119,46 +103,53 @@ class Tree
   
 }  // End of Tree class
 
+
+
 class Hedgehog
 {
   PImage picture;
   float hedgehogX;
-    float hedgehogY;
-    int hedgehogXSpeed;
-    int hedgehogYSpeed;
-    int hedgehogWidth;
-    int hedgehogHeight;
+  float hedgehogY;
+  int hedgehogXSpeed;
+  int hedgehogYSpeed;
+  int hedgehogWidth;
+  int hedgehogHeight;
     
   Hedgehog()
   {
-    hedgehogX   = width / 2;
-    hedgehogY   = 700;
-    hedgehogXSpeed = 50;
-    hedgehogYSpeed = 0;
-    hedgehogWidth         = 200;
-    hedgehogHeight        = 100;
+    hedgehogX          = width / 2;
+    hedgehogY          = 700;
+    hedgehogXSpeed     = 50;
+    hedgehogYSpeed     = 0;
+    hedgehogWidth      = 200;
+    hedgehogHeight     = 100;
   }
+  
   void draw()
   {
     if( hedgehogX > (width - (hedgehogWidth/2)) ) // If hedgehog is too far to the right, move it in
-      hedgehogX = hedgehogWidth/4; //width - hedgehogWidth/5;
+      hedgehogX = hedgehogWidth/4;
     else if( hedgehogX < hedgehogWidth/5 ) // If hedgehog is too far to the left, move it in
-      hedgehogX = width - hedgehogWidth/2;  //hedgehogWidth/2;
+      hedgehogX = width - hedgehogWidth/2;
     
     image( picture, hedgehogX, hedgehogY, hedgehogWidth, hedgehogHeight);
   }
+  
+  
   void moveHedgehog(boolean moveLeft, boolean moveRight) // move hedgehog left or right
   {
     if (moveLeft == true)  hedgehogX -= hedgehogXSpeed; 
     if (moveRight == true) hedgehogX += hedgehogXSpeed;
   }
+  
   void printYourself()
   {
     println (hedgehogX,"     ", hedgehogY,"     ", hedgehogWidth,"     ", hedgehogHeight);
   }
     
-  
 } // End of Hedgehog class
+
+
 
 
 void setup()
@@ -175,8 +166,8 @@ void draw()
 {
   if (showInstructions == true)
   {
-    //displayInstructions();
-    //showInstructions = false;
+    displayInstructions();
+    showInstructions = false;
   }
   
   
@@ -192,12 +183,9 @@ void draw()
   else
   {
     background(0);
-    
     drawTrees();
     hedgehog.draw();
-   
     moveTreesDown();
-
     updateScore(); // Updates the score and level
     showScore();
   }
@@ -250,7 +238,6 @@ boolean hedgehogHasBeenHit()
     hit = tree3.hasHitHedgehog();
   }
   return hit;
-
 }
 
 void displayInstructions()
@@ -265,35 +252,22 @@ void displayInstructions()
 
 void showScore()
 {
- // fill(0);
-//  rect(width-350, 100, 300, 100);
   fill(255);
-  text("Level: ", width-280, 150);
-  text (level, width-230, 150);
+  text("Level: ",  width-280, 150);
+  text (level,     width-230, 150);
   text("Score: " , width-280, 180);
-  text (score, width-230, 180);
+  text (score,     width-230, 180);
 }
 
 void updateScore()
 {
+  //Update score
   score = treesFallen;
-  /*
-  if ((score>=0) && (score<10))
-    level = 1
-  if ((score>=10) && (score<20))
-    level = 2;
-  */
-  
+
+  // Update level
   float i = score / 10;
   int j = floor(i);
-  
   level=1+j;
-  /*
-  if ((score % 10) == 0)
-  {
-    level++;
-  }
-  */
 }
 
 void moveTreesDown()
