@@ -11,7 +11,7 @@ This porject uses the translate function to move the image to its new position a
 boolean showInstructions = true;
 int score = 0;
 int level = 1;
-int treesFallen = 0;
+int treesFallen = 1;
 Tree tree1 = new Tree(100,0);
 Tree tree2 = new Tree(500,0);
 Tree tree3 = new Tree(1000,0);
@@ -27,16 +27,17 @@ class Tree
   int    treeYSpeed;
   int    treeWidth;
   int    treeHeight;
+  boolean isTreeDisplayed;
   
   Tree(float x, float y)
    {
      treeX=x;
      treeY=y;
      treeXSpeed        = 0;
-     treeYSpeed        = 20;
+     treeYSpeed        = 5;
      treeWidth         = 200;
      treeHeight        = 200;
-
+     isTreeDisplayed = false;
    }
    
   void draw()
@@ -47,30 +48,75 @@ class Tree
     image(tree, treeX, treeY,  treeWidth, treeHeight);
   }
   
+  //
   boolean moveDown()
   {
-     treeY     += treeYSpeed;      // Move tree down
-  
-    if (treeY >= height )               // Reset tree position if tree reached the bottom of the screen
-    {
-      treeX = random(0,width);
-      
-      if( treeX > (width - treeWidth/2) ) // If tree is too far to the right, move it in
-        treeX = width - treeWidth/2;
-        
-      if( treeX < treeWidth/2 ) // If tree is too far to the left, move it in
-        treeX = treeWidth/2;
-        
-      treeY = 0;   
-      return true;
-    }
-    else
+    if (isTreeDisplayed == false) 
     {
       return false;
     }
-   
+    else
+    {    
+       treeY     += treeYSpeed;      // Move tree down
+    
+      if (treeY >= height )               // Reset tree position if tree reached the bottom of the screen
+      {
+        treeX = random(0,width);
+        
+        if( treeX > (width - treeWidth/2) ) // If tree is too far to the right, move it in
+          treeX = width - treeWidth/2;
+          
+        if( treeX < treeWidth/2 ) // If tree is too far to the left, move it in
+          treeX = treeWidth/2;
+          
+        treeY = 0;   
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
   }
-}
+  
+  //
+  boolean hasHitHedgehog()
+  {
+    if( hedgehog.hedgehogX > (treeX + treeWidth) )
+    {
+      println ("met1",hedgehog.hedgehogX,"    ",treeX, "     ",treeWidth );
+      return false;
+    }
+    
+    if( ( hedgehog.hedgehogX +  hedgehog.hedgehogWidth) < treeX)
+     {
+      println ("met2",hedgehog.hedgehogX,"    ",hedgehog.hedgehogWidth, "     ",treeX );
+       return false;
+     }
+    if(  hedgehog.hedgehogY > (treeY + treeHeight) )
+    {
+           println ("met3",hedgehog.hedgehogY,"    ",treeY, "     ",treeHeight );
+
+      return false;
+    } 
+    if( ( hedgehog.hedgehogY +  hedgehog.hedgehogHeight) < treeY)
+     {
+                 println ("met4",hedgehog.hedgehogY,"    ",hedgehog.hedgehogHeight, "     ",treeY );
+
+       return false;
+     }
+     println ("met5");
+     printYourself();
+     hedgehog.printYourself();
+    return true;
+  }
+
+  void printYourself()
+  {
+    println (treeX,"     ", treeY,"     ", treeWidth,"     ", treeHeight);
+  }
+  
+}  // End of Tree class
 
 class Hedgehog
 {
@@ -86,20 +132,27 @@ class Hedgehog
   {
     hedgehogX   = width / 2;
     hedgehogY   = 700;
-    hedgehogXSpeed = 0;
+    hedgehogXSpeed = 50;
     hedgehogYSpeed = 0;
-    hedgehogWidth         = width*2;
-    hedgehogHeight        = height;
+    hedgehogWidth         = 200;
+    hedgehogHeight        = 100;
   }
   void draw()
   {
     image( picture, hedgehogX, hedgehogY, hedgehogWidth, hedgehogHeight);
   }
-  void moveHedgehog()
-   {
-     hedgehogX += hedgehogXSpeed;  // Move hedgehog
-   }
-}
+  void moveHedgehog(boolean moveLeft, boolean moveRight) // move hedgehog left or right
+  {
+    if (moveLeft == true)  hedgehogX -= hedgehogXSpeed; 
+    if (moveRight == true) hedgehogX += hedgehogXSpeed;
+  }
+  void printYourself()
+  {
+    println (hedgehogX,"     ", hedgehogY,"     ", hedgehogWidth,"     ", hedgehogHeight);
+  }
+    
+  
+} // End of Hedgehog class
 
 
 void setup()
@@ -133,51 +186,12 @@ void draw()
     
     drawTrees();
     hedgehog.draw();
-    
-    boolean tree1ReachedBottom = tree1.moveDown();
-    boolean tree2ReachedBottom = tree2.moveDown();
-    boolean tree3ReachedBottom = tree3.moveDown();
-    
-    if (tree1ReachedBottom)
-    {
-      treesFallen++;
-    }
-    if (tree2ReachedBottom)
-    {
-      treesFallen++;
-    }
-    if (tree3ReachedBottom)
-    {
-      treesFallen++;
-    }
+   
+    moveTreesDown();
 
     updateScore(); // Updates the score and level
     showScore();
-    /*
-    
-    treeYPosition     += treeYDisplacement;      // Move tree down
-    hedgehogXPosition += hedgehogXDisplacement;  // Move hedgehog
-  
-    if (treeYPosition >= height )               // Reset tree position if tree reached the bottom of the screen
-    {
-      treeXPosition = random(0,width);
-      
-      if( treeXPosition > (width - treeWidth/2) ) // If tree is too far to the right, move it in
-        treeXPosition = width - treeWidth/2;
-        
-      if( treeXPosition < treeWidth/2 ) // If tree is too far to the left, move it in
-        treeXPosition = treeWidth/2;
-        
-      treeYPosition = 0;   
- //     hedgehogXPosition = 1;
- 
- 
-    }
-
-    hedgehogXDisplacement = 0;  // Reset displacement to 0 so hedgehog will stay at its place if arrow keys are not pressed
-  } */
-  
-}
+  }
 }
 
 void drawTrees()
@@ -185,14 +199,19 @@ void drawTrees()
   if (level >= 1)
   {
    tree1.draw();
+   tree1.isTreeDisplayed = true;
   }
   if (level >= 2)
   {
    tree2.draw();
+      tree2.isTreeDisplayed = true;
+
   }
   if (level >= 3)
   {
    tree3.draw();
+      tree3.isTreeDisplayed = true;
+
   }
 }
 
@@ -202,33 +221,27 @@ void keyPressed()
 {
   if( key == CODED) {                  // check if key is CODED. This is for special keys
     if( keyCode == LEFT ) {            // if left key is pressed, move left
-       hedgehog.hedgehogXSpeed = -30;
+       hedgehog.moveHedgehog(true, false);
      }
      else if( keyCode == RIGHT ) {    // if right key is pressed, move right
-       hedgehog.hedgehogXSpeed = +30;
+       hedgehog.moveHedgehog(false,true);
      }
-     hedgehog.moveHedgehog();
   }
 }
 
 boolean hedgehogHasBeenHit()
 {
-  return false;
-  /*
-  if( hedgehogXPosition > (treeXPosition + treeWidth) )
-    return false;
-    
-  if( (hedgehogXPosition + hedgehogWidth) < treeXPosition)
-    return false;
-    
-  if( hedgehogYPosition > (treeYPosition + treeHeight) )
-    return false;;
-    
-  if( (hedgehogYPosition + hedgehogHeight) < treeYPosition)
-    return false;
-  
-  return true;
-  */
+  boolean hit = tree1.hasHitHedgehog();
+  if (hit == false)
+  {
+    hit = tree2.hasHitHedgehog();
+  }
+  if (hit == false)
+  {
+    hit = tree3.hasHitHedgehog();
+  }
+  return hit;
+
 }
 
 void displayInstructions()
@@ -255,8 +268,28 @@ void showScore()
 void updateScore()
 {
   score = treesFallen;
-  if (score % 10 == 0)
+  if ((score % 10) == 0)
   {
     level++;
+  }
+}
+
+void moveTreesDown()
+{
+  boolean tree1ReachedBottom = tree1.moveDown();
+  boolean tree2ReachedBottom = tree2.moveDown();
+  boolean tree3ReachedBottom = tree3.moveDown();
+  
+  if (tree1ReachedBottom == true)
+  {
+    treesFallen++;
+  }
+  if (tree2ReachedBottom == true)
+  {
+    treesFallen++;
+  }
+  if (tree3ReachedBottom == true)
+  {
+    treesFallen++;
   }
 }
