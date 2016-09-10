@@ -7,15 +7,20 @@ This porject uses the translate function to move the image to its new position a
 
  */
 
+// General variables
+boolean showInstructions = true;
+int score = 0;
+int level = 1;
 
 // Tree variables
 PImage tree;                   
 float  treeXPosition     = 50;    
 float  treeYPosition     = 10;
 int    treeXDisplacement = 0;
-int    treeYDisplacement = 4;
+int    treeYDisplacement = 40;
 int    treeWidth         = 300;
 int    treeHeight        = 300;
+int    treesFallen       = 0;
 
 // Hedgehog variables
 PImage hedgehog;
@@ -23,8 +28,8 @@ float hedgehogXPosition   = width / 2;
 float hedgehogYPosition   = 700;
 int hedgehogXDisplacement = 0;
 int hedgehogYDisplacement = 0;
-int hedgehogWidth         = 200;
-int hedgehogHeight        = 100;
+int hedgehogWidth         = width*2;
+int hedgehogHeight        = height;
 
 void setup()
 {
@@ -35,6 +40,12 @@ void setup()
 
 void draw() 
 {
+  if (showInstructions == true)
+  {
+    //displayInstructions();
+    //showInstructions = false;
+}
+  
   
   if( hedgehogHasBeenHit() == true)
   {
@@ -64,8 +75,11 @@ void draw()
         
       treeYPosition = 0;   
  //     hedgehogXPosition = 1;
+ 
+      treesFallen++;
+      updateScore(); // Updates the score and level
     }
-    
+    showScore();
     hedgehogXDisplacement = 0;  // Reset displacement to 0 so hedgehog will stay at its place if arrow keys are not pressed
   }
 }
@@ -101,6 +115,8 @@ void keyPressed()
 
 boolean hedgehogHasBeenHit()
 {
+  return false;
+  /*
   if( hedgehogXPosition > (treeXPosition + treeWidth) )
     return false;
     
@@ -108,10 +124,41 @@ boolean hedgehogHasBeenHit()
     return false;
     
   if( hedgehogYPosition > (treeYPosition + treeHeight) )
-    return false;
+    return false;;
     
   if( (hedgehogYPosition + hedgehogHeight) < treeYPosition)
     return false;
   
   return true;
+  */
+}
+
+void displayInstructions()
+{
+   //background(50, 50, 50);
+   //textSize(32);
+   //text("testing", 50, 50);
+   //String story = "This is the story of the hedgehog and evil trees. The hedgehog must escape the forest. If you go too close to the trees, you will be poisned and lose. Use the left and right arrow keys to move.";
+   //text(story, width/2 - 120, height/2);
+   //delay(3000);
+}
+
+void showScore()
+{
+ // fill(0);
+//  rect(width-350, 100, 300, 100);
+  fill(255);
+  text("Level: ", width-280, 150);
+  text (level, width-230, 150);
+  text("Score: " , width-280, 180);
+  text (score, width-230, 180);
+}
+
+void updateScore()
+{
+  score = treesFallen;
+  if (score % 10 == 0)
+  {
+    level++;
+  }
 }
