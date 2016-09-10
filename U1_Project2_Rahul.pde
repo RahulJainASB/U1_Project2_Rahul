@@ -13,8 +13,9 @@ int score = 0;
 int level = 1;
 int treesFallen = 0;
 Tree tree1 = new Tree(100,0);
-Tree tree2 = new Tree(100,0);
-Tree tree3 = new Tree(100,0);
+Tree tree2 = new Tree(500,0);
+Tree tree3 = new Tree(1000,0);
+Hedgehog hedgehog = new Hedgehog();
 
 
 class Tree
@@ -32,9 +33,9 @@ class Tree
      treeX=x;
      treeY=y;
      treeXSpeed        = 0;
-     treeYSpeed        = 40;
-     treeWidth         = 300;
-     treeHeight        = 300;
+     treeYSpeed        = 20;
+     treeWidth         = 200;
+     treeHeight        = 200;
 
    }
    
@@ -45,24 +46,66 @@ class Tree
   //  image(tree, 0, 0, 300, 300);
     image(tree, treeX, treeY,  treeWidth, treeHeight);
   }
+  
+  boolean moveDown()
+  {
+     treeY     += treeYSpeed;      // Move tree down
+  
+    if (treeY >= height )               // Reset tree position if tree reached the bottom of the screen
+    {
+      treeX = random(0,width);
+      
+      if( treeX > (width - treeWidth/2) ) // If tree is too far to the right, move it in
+        treeX = width - treeWidth/2;
+        
+      if( treeX < treeWidth/2 ) // If tree is too far to the left, move it in
+        treeX = treeWidth/2;
+        
+      treeY = 0;   
+      return true;
+    }
+    else
+    {
+      return false;
+    }
    
+  }
 }
 
-// Hedgehog variables
-PImage hedgehog;
-float hedgehogXPosition   = width / 2;
-float hedgehogYPosition   = 700;
-int hedgehogXDisplacement = 0;
-int hedgehogYDisplacement = 0;
-int hedgehogWidth         = width*2;
-int hedgehogHeight        = height;
-
+class Hedgehog
+{
+  PImage picture;
+  float hedgehogX;
+    float hedgehogY;
+    int hedgehogXSpeed;
+    int hedgehogYSpeed;
+    int hedgehogWidth;
+    int hedgehogHeight;
+    
+  Hedgehog()
+  {
+    hedgehogX   = width / 2;
+    hedgehogY   = 700;
+    hedgehogXSpeed = 0;
+    hedgehogYSpeed = 0;
+    hedgehogWidth         = width*2;
+    hedgehogHeight        = height;
+  }
+  void draw()
+  {
+    image( picture, hedgehogX, hedgehogY, hedgehogWidth, hedgehogHeight);
+  }
+  void moveHedgehog()
+   {
+     hedgehogX += hedgehogXSpeed;  // Move hedgehog
+   }
+}
 
 
 void setup()
 {
   fullScreen();
-  hedgehog = loadImage("Hedgehog.png");
+  hedgehog.picture = loadImage("Hedgehog.png");
   tree1.tree     = loadImage("Tree.png");
   tree2.tree     = loadImage("Tree.png");
   tree3.tree     = loadImage("Tree.png");
@@ -89,8 +132,27 @@ void draw()
     background(0);
     
     drawTrees();
-    drawHedgehog();
+    hedgehog.draw();
     
+    boolean tree1ReachedBottom = tree1.moveDown();
+    boolean tree2ReachedBottom = tree2.moveDown();
+    boolean tree3ReachedBottom = tree3.moveDown();
+    
+    if (tree1ReachedBottom)
+    {
+      treesFallen++;
+    }
+    if (tree2ReachedBottom)
+    {
+      treesFallen++;
+    }
+    if (tree3ReachedBottom)
+    {
+      treesFallen++;
+    }
+
+    updateScore(); // Updates the score and level
+    showScore();
     /*
     
     treeYPosition     += treeYDisplacement;      // Move tree down
@@ -109,10 +171,9 @@ void draw()
       treeYPosition = 0;   
  //     hedgehogXPosition = 1;
  
-      treesFallen++;
-      updateScore(); // Updates the score and level
+ 
     }
-    showScore();
+
     hedgehogXDisplacement = 0;  // Reset displacement to 0 so hedgehog will stay at its place if arrow keys are not pressed
   } */
   
@@ -135,24 +196,18 @@ void drawTrees()
   }
 }
 
-void drawHedgehog()
-{
-// Translate to the position where hedgehog will be placed
-//  translate(-treeXPosition + hedgehogXPosition + hedgehogXDisplacement, -treeYPosition + hedgehogYPosition + hedgehogYDisplacement);
-//  image(hedgehog, 0, 0, 200, 100);
 
-  image( hedgehog, hedgehogXPosition, hedgehogYPosition, hedgehogWidth, hedgehogHeight);
-}
 
 void keyPressed()
 {
   if( key == CODED) {                  // check if key is CODED. This is for special keys
     if( keyCode == LEFT ) {            // if left key is pressed, move left
-       hedgehogXDisplacement = -20;
+       hedgehog.hedgehogXSpeed = -30;
      }
      else if( keyCode == RIGHT ) {    // if right key is pressed, move right
-       hedgehogXDisplacement = +20;
+       hedgehog.hedgehogXSpeed = +30;
      }
+     hedgehog.moveHedgehog();
   }
 }
 
