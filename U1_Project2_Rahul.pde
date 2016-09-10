@@ -11,16 +11,42 @@ This porject uses the translate function to move the image to its new position a
 boolean showInstructions = true;
 int score = 0;
 int level = 1;
+int treesFallen = 0;
+Tree tree1 = new Tree(100,0);
+Tree tree2 = new Tree(100,0);
+Tree tree3 = new Tree(100,0);
 
-// Tree variables
-PImage tree;                   
-float  treeXPosition     = 50;    
-float  treeYPosition     = 10;
-int    treeXDisplacement = 0;
-int    treeYDisplacement = 40;
-int    treeWidth         = 300;
-int    treeHeight        = 300;
-int    treesFallen       = 0;
+
+class Tree
+{
+  PImage tree;                   
+  float  treeX;    
+  float  treeY;
+  int    treeXSpeed;
+  int    treeYSpeed;
+  int    treeWidth;
+  int    treeHeight;
+  
+  Tree(float x, float y)
+   {
+     treeX=x;
+     treeY=y;
+     treeXSpeed        = 0;
+     treeYSpeed        = 40;
+     treeWidth         = 300;
+     treeHeight        = 300;
+
+   }
+   
+  void draw()
+  {
+  // Translate to the position where to draw the tree
+  //  translate(treeXPosition, treeYPosition);
+  //  image(tree, 0, 0, 300, 300);
+    image(tree, treeX, treeY,  treeWidth, treeHeight);
+  }
+   
+}
 
 // Hedgehog variables
 PImage hedgehog;
@@ -31,11 +57,16 @@ int hedgehogYDisplacement = 0;
 int hedgehogWidth         = width*2;
 int hedgehogHeight        = height;
 
+
+
 void setup()
 {
   fullScreen();
-  tree     = loadImage("Tree.png");
   hedgehog = loadImage("Hedgehog.png");
+  tree1.tree     = loadImage("Tree.png");
+  tree2.tree     = loadImage("Tree.png");
+  tree3.tree     = loadImage("Tree.png");
+
 }
 
 void draw() 
@@ -44,7 +75,7 @@ void draw()
   {
     //displayInstructions();
     //showInstructions = false;
-}
+  }
   
   
   if( hedgehogHasBeenHit() == true)
@@ -59,6 +90,8 @@ void draw()
     
     drawTrees();
     drawHedgehog();
+    
+    /*
     
     treeYPosition     += treeYDisplacement;      // Move tree down
     hedgehogXPosition += hedgehogXDisplacement;  // Move hedgehog
@@ -81,15 +114,25 @@ void draw()
     }
     showScore();
     hedgehogXDisplacement = 0;  // Reset displacement to 0 so hedgehog will stay at its place if arrow keys are not pressed
-  }
+  } */
+  
+}
 }
 
 void drawTrees()
 {
-// Translate to the position where to draw the tree
-//  translate(treeXPosition, treeYPosition);
-//  image(tree, 0, 0, 300, 300);
-  image(tree, treeXPosition, treeYPosition,  treeWidth, treeHeight);
+  if (level >= 1)
+  {
+   tree1.draw();
+  }
+  if (level >= 2)
+  {
+   tree2.draw();
+  }
+  if (level >= 3)
+  {
+   tree3.draw();
+  }
 }
 
 void drawHedgehog()
