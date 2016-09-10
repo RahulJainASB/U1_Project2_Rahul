@@ -139,6 +139,11 @@ class Hedgehog
   }
   void draw()
   {
+    if( hedgehogX > (width - (hedgehogWidth/2)) ) // If hedgehog is too far to the right, move it in
+      hedgehogX = hedgehogWidth/4; //width - hedgehogWidth/5;
+    else if( hedgehogX < hedgehogWidth/5 ) // If hedgehog is too far to the left, move it in
+      hedgehogX = width - hedgehogWidth/2;  //hedgehogWidth/2;
+    
     image( picture, hedgehogX, hedgehogY, hedgehogWidth, hedgehogHeight);
   }
   void moveHedgehog(boolean moveLeft, boolean moveRight) // move hedgehog left or right
