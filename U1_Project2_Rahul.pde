@@ -16,6 +16,7 @@ Tree tree1 = new Tree(100,0);
 Tree tree2 = new Tree(500,0);
 Tree tree3 = new Tree(1000,0);
 Hedgehog hedgehog = new Hedgehog();
+boolean stop = false;
 
 
 class Tree
@@ -179,11 +180,14 @@ void draw()
   }
   
   
-  if( hedgehogHasBeenHit() == true)
+  if( (stop == true) || (hedgehogHasBeenHit() == true))
   {
-    background(200);
+    background(0);
     textSize(32);
-    text("I have been hit", width/2 - 120, height/2);
+    text("Game Over. The hedgehog has been poisoned.", width/2 - 120, height/2);
+    textSize(16);
+    showScore();
+    stop = true;
   }
   else
   {
