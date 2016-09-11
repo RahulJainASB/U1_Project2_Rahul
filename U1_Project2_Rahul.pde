@@ -66,7 +66,9 @@ void keyPressed()
      }
   }
   else if (key == ENTER || key == RETURN)
+  {
       showInstructions = false;        // This is set to false so that instructions are not showed again
+  }
 }
 
 
