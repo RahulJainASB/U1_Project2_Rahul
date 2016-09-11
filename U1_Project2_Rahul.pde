@@ -15,7 +15,51 @@ Tree    tree1             = new Tree(100,0);
 Tree    tree2             = new Tree(500,0);
 Tree    tree3             = new Tree(1000,0);
 Hedgehog hedgehog         = new Hedgehog();
-boolean stop              = false;
+boolean gameOver              = false;
+
+
+
+
+void setup()
+{
+  fullScreen();
+  hedgehog.picture = loadImage("Hedgehog.png");
+  tree1.tree     = loadImage("Tree.png");
+  tree2.tree     = loadImage("Tree.png");
+  tree3.tree     = loadImage("Tree.png");
+}
+
+void draw() 
+{
+  if (showInstructions == true)
+  {
+    displayInstructions();
+  }
+  else
+  {
+    if( (gameOver == true) || (hedgehogHasBeenHit() == true))
+    {
+      background(0);
+      textSize(32);
+      text("Game Over. The hedgehog has been poisoned.", width/2 - 120, height/2);
+      textSize(16);
+      showScore();
+      gameOver = true;
+    }
+    else
+    {
+      background(0);
+      drawTrees();
+      hedgehog.draw();
+      moveTreesDown();
+      updateScore(); // Updates the score and level
+      showScore();
+    }
+  }
+}
+
+
+
 
 
 class Tree
@@ -152,45 +196,6 @@ class Hedgehog
 
 
 
-void setup()
-{
-  fullScreen();
-  hedgehog.picture = loadImage("Hedgehog.png");
-  tree1.tree     = loadImage("Tree.png");
-  tree2.tree     = loadImage("Tree.png");
-  tree3.tree     = loadImage("Tree.png");
-
-}
-
-void draw() 
-{
-  if (showInstructions == true)
-  {
-    displayInstructions();
-    showInstructions = false;
-  }
-  
-  
-  if( (stop == true) || (hedgehogHasBeenHit() == true))
-  {
-    background(0);
-    textSize(32);
-    text("Game Over. The hedgehog has been poisoned.", width/2 - 120, height/2);
-    textSize(16);
-    showScore();
-    stop = true;
-  }
-  else
-  {
-    background(0);
-    drawTrees();
-    hedgehog.draw();
-    moveTreesDown();
-    updateScore(); // Updates the score and level
-    showScore();
-  }
-}
-
 void drawTrees()
 {
   if (level >= 1)
@@ -224,6 +229,8 @@ void keyPressed()
        hedgehog.moveHedgehog(false,true);
      }
   }
+  else if (key == ENTER || key == RETURN)
+      showInstructions = false;
 }
 
 boolean hedgehogHasBeenHit()
@@ -242,17 +249,19 @@ boolean hedgehogHasBeenHit()
 
 void displayInstructions()
 {
-   //background(50, 50, 50);
-   //textSize(32);
-   //text("testing", 50, 50);
-   //String story = "This is the story of the hedgehog and evil trees. The hedgehog must escape the forest. If you go too close to the trees, you will be poisned and lose. Use the left and right arrow keys to move.";
-   //text(story, width/2 - 120, height/2);
-   //delay(3000);
+   background(0);
+   textSize(32);
+   text("This is the story of the hedgehog and evil trees.",                 (width/10), (height/2) - 100);
+   text("The hedgehog must escape the forest.",                              (width/10), (height/2) - 50);
+   text("If you go too close to the trees, you will be poisned and lose.",   (width/10), (height/2));
+   text("Use the left and right arrow keys to move.",                        (width/10), (height/2) + 50);
+   text("Press enter to begin the game.",                                    (width/10), (height/2) + 100);
 }
 
 void showScore()
 {
   fill(255);
+  textSize(14);
   text("Level: ",  width-280, 150);
   text (level,     width-230, 150);
   text("Score: " , width-280, 180);
